@@ -4,12 +4,15 @@ A small set of Claude Code skills for shipping features and fixing bugs end to e
 
 ## Flows
 
+**Once per project:** `mw-design` before the first feature
+
 **Feature:** `mw-grill` → `mw-split` → `mw-plan` → `mw-build` → `mw-review` → `mw-docs` → `mw-commit` → `mw-pr` → `mw-wid`
 
 **Bug:** `mw-debug` → `mw-review` → `mw-commit` → `mw-pr` → `mw-wid`
 
 | Skill | Does |
 |---|---|
+| `mw-design` | Grills the visual design system, writes `docs/DESIGN.md` and design tokens |
 | `mw-grill` | Reads docs and code, asks questions until the feature is unambiguous, writes a summary |
 | `mw-split` | Turns a grill summary into local tickets in `tickets/` |
 | `mw-plan` | Turns a ticket into a plan and stops for approval |
