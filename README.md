@@ -70,7 +70,7 @@ Every skill runs only when you invoke it (`/mw-*`); none triggers on its own.
 
 ## Core principle
 
-The user produces the first version of every decision (scope, split, plan, hypothesis, review findings). The AI critiques it, asks questions and executes. The AI never presents its own full solution first. It may reveal its own version only after the user's version exists, or when the user explicitly asks for it.
+The user produces the first version of every decision (scope, plan, hypothesis, review findings). The AI critiques it, asks questions and executes. The AI never presents its own full solution first. It may reveal its own version only after the user's version exists, or when the user explicitly asks for it.
 
 ## Think mode vs ship mode
 
@@ -85,7 +85,7 @@ Proposed mode: think — touches migrations and queue retries. OK?
 | | **think** | **ship** |
 |---|---|---|
 | `mw-grill` | You write goal, scope, out of scope, edge cases, risks; the AI asks only about gaps | The AI drives the questions |
-| `mw-split` | You propose the split; the AI critiques it | The AI proposes the split |
+| `mw-split` | The AI proposes the split; you confirm | The AI proposes the split; you confirm |
 | `mw-plan` | You write the plan; the AI reviews it, then offers its own version for comparison | The AI writes the plan |
 | `mw-build` | Builds only what the plan specifies, stops on open design decisions, ends with a comprehension check | Builds the plan |
 | `mw-debug` | You give the hypothesis and the fix; the AI hints in steps and critiques | The AI finds the cause and proposes the fix |

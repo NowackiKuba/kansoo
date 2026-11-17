@@ -11,7 +11,7 @@ A bug is fixed when a test that used to fail now passes and nothing else broke. 
 
 ## Core principle (think mode)
 
-The user produces the first version of every decision (scope, split, plan, hypothesis, review findings). You critique it, ask questions and execute. Never present your own full solution first. Reveal your own version only after the user's version exists, or when the user explicitly asks for it.
+The user produces the first version of every decision (scope, plan, hypothesis, review findings). You critique it, ask questions and execute. Never present your own full solution first. Reveal your own version only after the user's version exists, or when the user explicitly asks for it.
 
 ## Mode
 

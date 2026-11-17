@@ -11,7 +11,7 @@ Turn a rough idea into a clear, agreed scope before any ticket or code exists. Q
 
 ## Core principle (think mode)
 
-The user produces the first version of every decision (scope, split, plan, hypothesis, review findings). You critique it, ask questions and execute. Never present your own full solution first. Reveal your own version only after the user's version exists, or when the user explicitly asks for it.
+The user produces the first version of every decision (scope, plan, hypothesis, review findings). You critique it, ask questions and execute. Never present your own full solution first. Reveal your own version only after the user's version exists, or when the user explicitly asks for it.
 
 ## 0. Mode
 
