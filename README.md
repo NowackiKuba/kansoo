@@ -1,10 +1,50 @@
+<div align="center">
+
 # Minimalistic Workflow
 
-A small set of Claude Code skills for shipping features and fixing bugs end to end. Each skill does one thing. The human approves the plan; the agent implements, verifies and documents.
+**Each skill does one thing. You approve the plan; the agent ships.**
+
+<img src="assets/hero.webp" alt="Animated demo: the tagline types out, the mw-* skill pipeline lights up, then /mw-plan waits for approval and /mw-build passes test, typecheck and lint" width="800">
+
+![Claude Code skills](https://img.shields.io/badge/Claude_Code-skills-D97757?style=flat-square)
+![11 skills](https://img.shields.io/badge/skills-11-555?style=flat-square)
+![Bash scripts](https://img.shields.io/badge/scripts-bash-4EAA25?style=flat-square&logo=gnubash&logoColor=white)
+
+</div>
+
+A small set of Claude Code skills for shipping features and fixing bugs end to end. The human approves the plan; the agent implements, verifies and documents.
+
+## Quick start
+
+```bash
+git clone https://github.com/NowackiKuba/minimalistic-workflow.git ~/minimalistic-workflow
+cp -r ~/minimalistic-workflow/skills/* ~/.claude/skills/
+ln -sfn ~/minimalistic-workflow/bin/* ~/.local/bin/
+
+cd your-project && mw-init   # keep tickets/ and .mw/ out of git
+```
+
+Then in Claude Code: `/mw-design` once per project, `/mw-grill` to start a feature, `/mw-debug` for a bug. Full setup: [Install](#install).
 
 ## Flows
 
 **Once per project:** `mw-design` before the first feature
+
+```mermaid
+flowchart LR
+  subgraph Feature
+    direction LR
+    grill[mw-grill] --> split[mw-split] --> plan[mw-plan] --> approve{{you approve}} --> build[mw-build]
+  end
+  subgraph Bug
+    direction LR
+    debug[mw-debug]
+  end
+  build --> review[mw-review]
+  debug --> review
+  review --> docs[mw-docs] --> commit[mw-commit] --> pr[mw-pr] --> wid[mw-wid]
+  review -. bug: no docs .-> commit
+```
 
 **Feature:** `mw-grill` → `mw-split` → `mw-plan` → `mw-build` → `mw-review` → `mw-docs` → `mw-commit` → `mw-pr` → `mw-wid`
 
@@ -73,6 +113,9 @@ The single definition. `mw-review` uses it to pick review size L; `mw-grill`, `m
 
 ## Files the workflow uses
 
+<details>
+<summary>Paths</summary>
+
 ```
 CLAUDE.md                 # project map: docs, commands (see templates/CLAUDE.md)
 tickets/NNN-slug.md       # local tickets (mw-split)
@@ -80,6 +123,8 @@ tickets/NNN-slug.md       # local tickets (mw-split)
 .mw/plans/NNN-slug.md     # approved plans (mw-plan)
 .mw/metrics.jsonl         # one line per step, for measuring the workflow (local only)
 ```
+
+</details>
 
 ## Install
 
@@ -97,7 +142,8 @@ ln -sfn ~/minimalistic-workflow/bin/* ~/.local/bin/
 
 Then add the sections from `templates/CLAUDE.md` to your project's `CLAUDE.md`, and run `mw-init` in the project root.
 
-### Scripts
+<details>
+<summary><b>Scripts</b>: mw-init, mw-run, mw-stats</summary>
 
 | Script | Does |
 |---|---|
@@ -105,7 +151,12 @@ Then add the sections from `templates/CLAUDE.md` to your project's `CLAUDE.md`, 
 | `mw-run <test\|typecheck\|lint> -- <command...>` | Runs a check with compact output: `ok (<kind>)` on success; on failure the last 40 lines (test) or the first 20 error lines plus an error count (typecheck, lint). Exits with the command's exit code. The skills run every check through it. |
 | `mw-stats [weeks=4]` | Weekly summary of `.mw/metrics.jsonl` in the current project, answering the three questions below. Needs `jq`. |
 
+</details>
+
 ## Metrics
+
+<details>
+<summary>What gets logged and why</summary>
 
 `grill`, `plan`, `build`, `debug` and `review` each append one line to `.mw/metrics.jsonl`. The metrics answer exactly three questions; a field that answers none of them is not logged.
 
@@ -114,6 +165,8 @@ Then add the sections from `templates/CLAUDE.md` to your project's `CLAUDE.md`, 
 | 1. Are my plans getting better? | plan `revisions`; build `deviations`, `attempts`, `result` (`stopped`) |
 | 2. Am I catching more in review? | review `user_found` vs `user_missed` (think mode) |
 | 3. Do I actually use think mode, and is it worth it? | `mode` on every line: think/ship ratio, and review `blockers` and build stops per mode |
+
+</details>
 
 ## Principles
 
