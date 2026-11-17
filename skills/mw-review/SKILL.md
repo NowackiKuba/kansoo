@@ -11,7 +11,7 @@ Review like a senior colleague who did not write the code. Output only what to c
 
 ## Core principle (think mode)
 
-The user produces the first version of every decision (scope, split, plan, hypothesis, review findings). You critique it, ask questions and execute. Never present your own full solution first. Reveal your own version only after the user's version exists, or when the user explicitly asks for it.
+The user produces the first version of every decision (scope, plan, hypothesis, review findings). You critique it, ask questions and execute. Never present your own full solution first. Reveal your own version only after the user's version exists, or when the user explicitly asks for it.
 
 ## 1. Resolve the target
 
@@ -61,17 +61,24 @@ State the chosen size in one line before starting.
 
 Give every subagent: the diff, the ticket/plan, the relevant docs, its single focus area, and this instruction:
 
-> Report only real problems in your focus area. For each: `file:line`, what to change, why (one sentence). No praise, no summaries, no style nits a linter would catch. If you find nothing, return "none".
+> Report only real problems in your focus area. For each: `file:line`, what to change, why (one sentence), and evidence. No praise, no summaries, no style nits a linter would catch. If you find nothing, return "none".
+>
+> Every finding must be proven from this codebase. No evidence, no finding:
+> - **Bug or edge case:** a concrete failure scenario that traces through real code: "input X reaches `a.ts:42`, `b.ts:17` does Z, result is Y". A failing test or command output is better. "Might", "could" or "consider" is not evidence.
+> - **Convention or design:** at least one existing place in the codebase that does it the other way, with `file:line`. If no code here shows the convention, it is a preference: drop it.
+> - **Plan or ticket violation:** quote the plan line or acceptance criterion it breaks.
+>
+> Use judgement before reporting: would this cause a wrong result, an incident, or real pain in the next change to this code? If not, drop it. There is no minimum number of findings.
 
 Run subagents in parallel. For size S, apply the same rules yourself across all areas.
 
 ## 6. Merge and verify
 
 - Deduplicate overlapping findings.
-- Check every finding against the code yourself. Drop anything you cannot confirm.
+- Verify every finding's evidence yourself: open each cited `file:line` and confirm the code there says what the finding claims, and walk the failure scenario through it. Drop the finding if a citation is wrong, the scenario does not hold, or it has no evidence.
 - Run tests, typecheck and lint through `mw-run` (`mw-run test -- <test command>`, and so on). Do not trust earlier reports. Rerun a single failing test with full output only when the compact output is not enough to diagnose it.
 - Classify: **blocker** = bug, security issue, data risk, broken acceptance criterion, plan violation. Everything else is a **suggestion**.
-- **Think mode:** check every user finding against the code the same way. Match the user's findings to the verified ones: a verified finding the user reported is **found**, one they did not report is **missed**, and a user finding that is not a real problem is a **false alarm**.
+- **Think mode:** check every user finding against the code the same way. Calling a user finding a false alarm needs evidence too: cite the code that shows it is not a problem. Match the user's findings to the verified ones: a verified finding the user reported is **found**, one they did not report is **missed**, and a user finding that is not a real problem is a **false alarm**.
 
 ## 7. Output
 
@@ -84,9 +91,11 @@ Size: S|M|L · Checks: tests ✓/✗ · typecheck ✓/✗ · lint ✓/✗
 
 Blockers
 - path/file.ts:42 — <what to change> — <why>
+  evidence: <cited file:line and what it shows>
 
 Suggestions
 - path/file.ts:88 — <what to change> — <why>
+  evidence: <cited file:line and what it shows>
 ```
 
 Think mode (list blockers first within each section):
@@ -96,15 +105,18 @@ Size: S|M|L · Checks: tests ✓/✗ · typecheck ✓/✗ · lint ✓/✗
 
 You found
 - [blocker] path/file.ts:42 — <what to change> — <why>
+  evidence: <cited file:line and what it shows>
 
 You missed
 - [suggestion] path/file.ts:88 — <what to change> — <why>
+  evidence: <cited file:line and what it shows>
 
 False alarms
 - path/file.ts:10 — <the user's finding> — <why it is not a problem>
+  evidence: <cited file:line and what it shows>
 ```
 
-Omit an empty section. If there are no findings at all, output the first line and `No issues found.`
+Every finding keeps its evidence line, so the user can check it in seconds. Omit an empty section. If there are no findings at all, output the first line and `No issues found.`
 
 ## Metrics
 
