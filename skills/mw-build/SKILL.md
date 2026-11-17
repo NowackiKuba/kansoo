@@ -21,7 +21,7 @@ The user produces the first version of every decision (scope, split, plan, hypot
 
 ## Implement
 
-- Follow the plan's file list. Touch nothing outside it unless required for the plan to work.
+- Create new files as the plan's Approach and the project's conventions dictate. Modify or delete no existing file outside the plan's `Existing code touched` list unless required for the plan to work.
 - Write the tests listed in the plan along with the code.
 - Match existing patterns in the codebase over your own preferences.
 - Skip every part of the plan marked `[human]`. Leave a `TODO [human]: <what, plan section>` comment where that code belongs.

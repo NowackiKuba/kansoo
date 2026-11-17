@@ -32,9 +32,9 @@ Record the mode in the plan.
 ## Steps (think mode)
 
 1. Read the ticket (`tickets/NNN-*.md`) or the task the user described.
-2. Ask the user to write the plan in the format below: approach, files, data flow, invariants, edge cases, tests. Tell them the plan must be detailed enough that implementation needs no design decisions. They may mark any section `[human]` to implement it themselves. Wait for it.
+2. Ask the user to write the plan in the format below: approach, existing code touched, data flow, invariants, edge cases, tests. Tell them the plan must be detailed enough that implementation needs no design decisions. They may mark any section `[human]` to implement it themselves. Wait for it.
 3. Read `CLAUDE.md`, the relevant docs from its map, and the code the plan touches: callers, tests, similar existing features.
-4. Review the user's plan against the code and docs: risks, missing files, existing patterns they should reuse, unhandled cases, and vague parts that would force a design decision during build. Raise each as a question, with `file:line` where it helps. Do not rewrite the plan.
+4. Review the user's plan against the code and docs: risks, missing callers or other existing code the change must reach, existing patterns they should reuse, unhandled cases, and vague parts that would force a design decision during build. Raise each as a question, with `file:line` where it helps. Do not rewrite the plan.
 5. When the user has answered, write the plan, in their decisions, to `.mw/plans/NNN-<slug>.md`. Show it and **stop**. Do not edit any source file until the user approves.
 6. After approval, offer (do not force) to show how you would have planned it, for comparison.
 
@@ -50,7 +50,9 @@ If the ticket is ambiguous or conflicts with the architecture, list the question
 
 ## Plan format
 
-`Data flow`, `Invariants` and `Edge cases` are required in think mode and optional in ship mode. A heading or table row marked `[human]` is implemented by the user; `mw-build` skips it.
+`Data flow`, `Invariants` and `Edge cases` are required in think mode and optional in ship mode. A heading or list item marked `[human]` is implemented by the user; `mw-build` skips it.
+
+`Existing code touched` lists only existing files that are modified or deleted (callers, shared modules, migrations, config). New files are not listed: they follow from the Approach and the project's conventions.
 
 ```markdown
 # Plan: NNN <title>
@@ -61,11 +63,9 @@ If the ticket is ambiguous or conflicts with the architecture, list the question
 
 <3–6 sentences: what and why this way>
 
-## Changes
+## Existing code touched
 
-| File            | Change                      |
-| --------------- | --------------------------- |
-| path/to/file.ts | new / modify / delete: what |
+- path/to/file.ts — modify / delete: what
 
 ## Data flow
 
