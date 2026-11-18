@@ -60,8 +60,8 @@ flowchart LR
 | `mw-debug` | Reproduces a bug with a failing test, then fixes it |
 | `mw-review` | Reviews the diff against the ticket, plan and conventions |
 | `mw-docs` | Updates docs the change made stale |
-| `mw-commit` | Small, logical conventional commits |
-| `mw-pr` | PR description from the project's PR template |
+| `mw-commit` | Small, logical conventional commits, then push |
+| `mw-pr` | Opens the PR with a description from the project's PR template |
 | `mw-wid` | Short "what I did" note in your Obsidian vault, one folder per project |
 
 Every skill runs only when you invoke it (`/mw-*`); none triggers on its own.
