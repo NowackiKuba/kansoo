@@ -52,7 +52,7 @@ If the ticket is ambiguous or conflicts with the architecture, list the question
 
 `Data flow`, `Invariants` and `Edge cases` are required in think mode and optional in ship mode. A heading or list item marked `[human]` is implemented by the user; `mw-build` skips it.
 
-`Existing code touched` lists only existing files that are modified or deleted (callers, shared modules, migrations, config). New files are not listed: they follow from the Approach and the project's conventions.
+`Existing code touched` lists only existing files that are modified or deleted (callers, shared modules, migrations, config). New files are not listed: they follow from the Approach and the project's conventions. Docs are never listed: `mw-build` does not touch them, `mw-docs` updates them after review.
 
 ```markdown
 # Plan: NNN <title>

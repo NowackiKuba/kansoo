@@ -38,7 +38,7 @@ Record the mode in the report.
    - **Think mode:** check the user's hypothesis instead of forming your own. If it is wrong or incomplete, give hints in steps, one at a time: where to look, then what to check, then the likely cause. Give the full root cause only when the user asks for it or has found it.
 4. **Propose.** Before editing, tell the user in a few lines: root cause, proposed fix, files touched. For a small, obvious fix you may proceed; for anything touching shared code, data or behaviour beyond the bug, wait for approval.
    - **Think mode:** the user proposes the fix. Critique it (does it remove the cause, side effects, same cause elsewhere, missing cases), then implement it once agreed.
-5. **Fix.** Minimal change that removes the cause. Follow architecture and conventions.
+5. **Fix.** Minimal change that removes the cause. Follow architecture and conventions. Never touch docs (`README.md`, `CLAUDE.md`, `docs/`, the `CLAUDE.md` docs map); list any doc the fix made stale under `## Stale docs` in the report, for `mw-docs`.
 6. **Verify.** Run the reproduction test (now green), then the full test suite, typecheck and lint, each through `mw-run` (see `mw-build`). Rerun a single failing test with full output only when the compact output is not enough to diagnose it. Same loop rules as `mw-build`: fix causes, never weaken tests, max 3 attempts, then stop and report.
 
 ## Report
@@ -57,6 +57,10 @@ Record the mode in the report.
 <name of the reproduction test>
 
 ## Same cause elsewhere?
+
+## Stale docs
+
+<only if any>
 ```
 
 Never stage or commit. Leave every change uncommitted in the working tree: `mw-review` reviews uncommitted changes (`git diff HEAD`) by default, and committing is `mw-commit`'s job after review.
