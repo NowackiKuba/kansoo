@@ -21,6 +21,7 @@ The user produces the first version of every decision (scope, plan, hypothesis, 
 
 ## Implement
 
+- **Never touch docs.** Do not create, edit or delete `README.md`, `CLAUDE.md`, anything under `docs/`, or any file in the `CLAUDE.md` docs map — not even when the plan lists it or a doc is now wrong. Docs are `mw-docs`'s job. Note the stale doc in the report instead.
 - Create new files as the plan's Approach and the project's conventions dictate. Modify or delete no existing file outside the plan's `Existing code touched` list unless required for the plan to work.
 - Write the tests listed in the plan along with the code.
 - Match existing patterns in the codebase over your own preferences.
@@ -54,7 +55,7 @@ Never ask:
 
 ## Report
 
-When green, report: files changed, tests added, any approved deviation, a summary of the verification output, and every `TODO [human]` left for the user (file, plan section, what to write).
+When green, report: files changed, tests added, any approved deviation, a summary of the verification output, every `TODO [human]` left for the user (file, plan section, what to write), and any doc the change made stale (for `mw-docs`).
 
 Never stage or commit. Leave every change uncommitted in the working tree: `mw-review` reviews uncommitted changes (`git diff HEAD`) by default, and committing is `mw-commit`'s job after review.
 
