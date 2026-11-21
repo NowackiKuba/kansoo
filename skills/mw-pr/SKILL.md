@@ -19,7 +19,7 @@ A PR description lets the reviewer understand the change before reading the code
    - Risks, migrations, config or env changes, breaking changes
    - Anything the reviewer should look at closely
 4. Do not describe what the diff already shows line by line. Do not claim tests or checks that were not run.
-5. Open the PR without waiting for confirmation: push the branch if it is not pushed yet, write the description to a temp file and run `gh pr create --base <default branch> --title "<conventional title>" --body-file <file>`. If a PR for the branch already exists, update it with `gh pr edit --body-file <file>` instead. Report the PR URL.
+5. Open the PR without waiting for confirmation: push the branch if it is not pushed yet, write the description to a temp file and run `gh pr create --base <default branch> --title "<conventional title>" --body-file <file>`. If the work has a ticket, end the title with its number in parentheses: a tracker ticket (e.g. Linear or Jira) as `feat(auth): add login (ABC-123)`, or a local `tickets/NNN-slug.md` from `mw-split` as `feat(auth): add login (007)`. No ticket, no number. If a PR for the branch already exists, update it with `gh pr edit --title "<title>" --body-file <file>` instead. Report the PR URL.
 
 Next step: `mw-wid`.
 
