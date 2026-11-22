@@ -29,7 +29,7 @@ If the diff is empty, say so in one line and stop.
 ## 2. Gather context
 
 - The diff and `git diff --stat` for the same target.
-- The ticket and plan in `tickets/` and `.mw/plans/` matching the change (or the `mw-debug` report), if they exist.
+- The ticket and plan in `tickets/` and `.mw/plans/` matching the change (or the `mw-debug` report), and the grill summary named in the plan's `**Grill:**` line, if they exist. Grill decisions and edge cases count as part of the plan.
 - `CLAUDE.md`, architecture and conventions docs.
 - Surrounding code of every changed file, not only the changed lines.
 
