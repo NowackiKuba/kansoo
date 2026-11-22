@@ -9,6 +9,13 @@ disable-model-invocation: true
 
 A plan is the contract `mw-build` implements and `mw-review` checks against. Fixing a plan costs minutes; fixing code costs hours.
 
+The plan covers only **how** to build the ticket. The **what** and **why** (goal, scope, decisions, edge cases, risks) were settled in the grill summary and are fixed input. Refer to them; never restate them or ask the user to write them again.
+
+## Input
+
+- The ticket in `tickets/NNN-*.md`, or the task the user described.
+- The grill summary in `.mw/grill/<slug>.md`, where `<slug>` is the ticket's `**Feature:**`. If there is none (e.g. a task without a grill), the ticket is the only source of decisions; list anything it leaves undecided under New findings.
+
 ## Core principle (think mode)
 
 The user produces the first version of every decision (scope, plan, hypothesis, review findings). You critique it, ask questions and execute. Never present your own full solution first. Reveal your own version only after the user's version exists, or when the user explicitly asks for it.
@@ -31,63 +38,53 @@ Record the mode in the plan.
 
 ## Steps (think mode)
 
-1. Read the ticket (`tickets/NNN-*.md`) or the task the user described.
-2. Ask the user to write the plan in the format below: approach, existing code touched, data flow, invariants, edge cases, tests. Tell them the plan must be detailed enough that implementation needs no design decisions. They may mark any section `[human]` to implement it themselves. Wait for it.
+1. Read the ticket and the grill summary (see Input).
+2. Ask the user to write only **Approach** and **Shape** (see Plan format). Tell them it must be detailed enough that implementation needs no design decisions, and that grill decisions need not be repeated. They may mark any section `[human]` to implement it themselves. Wait for it.
 3. Read `CLAUDE.md`, the relevant docs from its map, and the code the plan touches: callers, tests, similar existing features.
-4. Review the user's plan against the code and docs: risks, missing callers or other existing code the change must reach, existing patterns they should reuse, unhandled cases, and vague parts that would force a design decision during build. Raise each as a question, with `file:line` where it helps. Do not rewrite the plan.
-5. When the user has answered, write the plan, in their decisions, to `.mw/plans/NNN-<slug>.md`. Show it and **stop**. Do not edit any source file until the user approves.
-6. After approval, offer (do not force) to show how you would have planned it, for comparison.
+4. Review the user's plan against the code, docs and grill decisions: missing callers or other existing code the change must reach, existing patterns they should reuse, grill edge cases the shape does not handle, and vague parts that would force a design decision during build. Raise each as a question, with `file:line` where it helps. Do not rewrite the plan.
+5. Draft **Existing code touched**, **Tests** and **New findings** yourself.
+6. When the user has answered, write the plan, in their decisions, to `.mw/plans/NNN-<slug>.md`. Show it and **stop**. Do not edit any source file until the user approves.
+7. After approval, offer (do not force) to show how you would have planned it, for comparison.
 
 ## Steps (ship mode)
 
-1. Read the ticket (`tickets/NNN-*.md`) or the task the user described.
+1. Read the ticket and the grill summary (see Input).
 2. Read `CLAUDE.md`, then the docs from its map that are relevant to this ticket.
 3. Read the code you will change and the code around it: callers, tests, similar existing features. Reuse existing patterns.
 4. Write the plan to `.mw/plans/NNN-<slug>.md` in the format below.
 5. Show the plan and **stop**. Ask for approval. Do not edit any source file until the user approves.
 
-If the ticket is ambiguous or conflicts with the architecture, list the questions in the plan instead of guessing.
-
 ## Plan format
 
-`Data flow`, `Invariants` and `Edge cases` are required in think mode and optional in ship mode. A heading or list item marked `[human]` is implemented by the user; `mw-build` skips it.
+A heading or list item marked `[human]` is implemented by the user; `mw-build` skips it.
 
-`Existing code touched` lists only existing files that are modified or deleted (callers, shared modules, migrations, config). New files are not listed: they follow from the Approach and the project's conventions. Docs are never listed: `mw-build` does not touch them, `mw-docs` updates them after review.
+- **Approach:** how, in 2–4 sentences. No why: that lives in the grill summary.
+- **Shape:** the code-level decisions build would otherwise have to make: new modules/files and where they live, key types and signatures, which existing pattern each part follows, and the order of work.
+- **Existing code touched:** only existing files that are modified or deleted (callers, shared modules, migrations, config). New files belong in Shape. Docs are never listed: `mw-build` does not touch them, `mw-docs` updates them after review.
+- **Tests:** one line per acceptance criterion and per grill edge case this ticket covers, so nothing decided in the grill goes untested.
+- **New findings:** only what reading the code revealed that the grill and ticket did not decide: an unhandled case, a conflict with the architecture, or **code that contradicts a grill decision** (the grill may be out of date). Each is a question for the user, never a silent choice. Omit the section if empty.
 
 ```markdown
 # Plan: NNN <title>
 
 **Mode:** think | ship
+**Grill:** .mw/grill/<slug>.md | none
 
 ## Approach
 
-<3–6 sentences: what and why this way>
+## Shape
 
 ## Existing code touched
 
 - path/to/file.ts — modify / delete: what
 
-## Data flow
-
-## Invariants
-
-## Edge cases
-
 ## Tests
 
-- <test case> — <what it proves>
+- <test case> — <AC or grill edge case it proves>
 
-## Risks
+## New findings
 
-- <risk> — <mitigation>
-
-## Questions
-
-- <only if any>
-
-## Docs read
-
-- <path>
+- <finding> — <question for the user>
 ```
 
 ## After feedback

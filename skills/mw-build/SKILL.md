@@ -16,13 +16,13 @@ The user produces the first version of every decision (scope, plan, hypothesis, 
 ## Before coding
 
 1. Read the approved plan in `.mw/plans/NNN-*.md`. If there is no approved plan, stop and suggest `mw-plan`. Use the mode recorded in the plan; if none is recorded, ask once: "think or ship?"
-2. Read the ticket, `CLAUDE.md`, and the architecture and conventions docs.
+2. Read the ticket, the grill summary named in the plan's `**Grill:**` line (the plan refers to its decisions without restating them), `CLAUDE.md`, and the architecture and conventions docs.
 3. Find the test, typecheck and lint commands in `CLAUDE.md`. If they are missing, read `package.json` (or equivalent) and ask the user to confirm them. Run every check through `mw-run <test|typecheck|lint> -- <command>` (e.g. `mw-run test -- pnpm test`): it prints `ok (<kind>)` on success and only the useful part of the output on failure.
 
 ## Implement
 
 - **Never touch docs.** Do not create, edit or delete `README.md`, `CLAUDE.md`, anything under `docs/`, or any file in the `CLAUDE.md` docs map — not even when the plan lists it or a doc is now wrong. Docs are `mw-docs`'s job. Note the stale doc in the report instead.
-- Create new files as the plan's Approach and the project's conventions dictate. Modify or delete no existing file outside the plan's `Existing code touched` list unless required for the plan to work.
+- Create new files as the plan's Shape and the project's conventions dictate. Modify or delete no existing file outside the plan's `Existing code touched` list unless required for the plan to work.
 - Write the tests listed in the plan along with the code.
 - Match existing patterns in the codebase over your own preferences.
 - Skip every part of the plan marked `[human]`. Leave a `TODO [human]: <what, plan section>` comment where that code belongs.
