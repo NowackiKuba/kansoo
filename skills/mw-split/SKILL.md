@@ -24,6 +24,8 @@ Use the mode recorded in the summary. If none is recorded, ask once: "think or s
 - Put foundations (migrations, shared types) in their own early ticket.
 - Every ticket must have acceptance criteria that can be checked by a test or a clear manual step.
 - Size: S (under half a day), M (about a day), L (more). Split every L.
+- **Covers** points to the grill decisions and edge cases this ticket implements, by name. Never restate or paraphrase them: the grill summary stays the single source, and `mw-plan` reads it directly.
+- Every in-scope grill decision and edge case appears in at least one ticket's Covers. List any that do not when you show the split.
 
 ## Ticket format
 
@@ -41,9 +43,10 @@ Number tickets after the highest existing number in `tickets/`. File: `tickets/N
 
 <one or two sentences>
 
-## Context
+## Covers
 
-<only what this ticket needs from the grill summary>
+- Decision: <grill decision, named as in the summary>
+- Edge case: <grill edge case, named as in the summary>
 
 ## Acceptance criteria
 

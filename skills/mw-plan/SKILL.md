@@ -14,7 +14,7 @@ The plan covers only **how** to build the ticket. The **what** and **why** (goal
 ## Input
 
 - The ticket in `tickets/NNN-*.md`, or the task the user described.
-- The grill summary in `.mw/grill/<slug>.md`, where `<slug>` is the ticket's `**Feature:**`. If there is none (e.g. a task without a grill), the ticket is the only source of decisions; list anything it leaves undecided under New findings.
+- The grill summary in `.mw/grill/<slug>.md`, where `<slug>` is the ticket's `**Feature:**`. The ticket's `## Covers` names which of its decisions and edge cases this ticket implements. If there is none (e.g. a task without a grill), the ticket is the only source of decisions; list anything it leaves undecided under New findings.
 
 ## Core principle (think mode)
 
@@ -61,7 +61,7 @@ A heading or list item marked `[human]` is implemented by the user; `mw-build` s
 - **Approach:** how, in 2–4 sentences. No why: that lives in the grill summary.
 - **Shape:** the code-level decisions build would otherwise have to make: new modules/files and where they live, key types and signatures, which existing pattern each part follows, and the order of work.
 - **Existing code touched:** only existing files that are modified or deleted (callers, shared modules, migrations, config). New files belong in Shape. Docs are never listed: `mw-build` does not touch them, `mw-docs` updates them after review.
-- **Tests:** one line per acceptance criterion and per grill edge case this ticket covers, so nothing decided in the grill goes untested.
+- **Tests:** one line per acceptance criterion and per edge case in the ticket's `## Covers`, so nothing decided in the grill goes untested.
 - **New findings:** only what reading the code revealed that the grill and ticket did not decide: an unhandled case, a conflict with the architecture, or **code that contradicts a grill decision** (the grill may be out of date). Each is a question for the user, never a silent choice. Omit the section if empty.
 
 ```markdown
