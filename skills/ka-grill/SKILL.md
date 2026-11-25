@@ -1,11 +1,11 @@
 ---
-name: mw-grill
-description: Grill a feature idea or requirement until nothing is ambiguous, grounded in the project's docs and code. Use whenever the user wants to discuss, clarify, scope, stress-test or grill a feature, change or idea before building it, or says things like "let's grill this", "let's scope this feature", "let's talk this through before we start". First step of the Minimalistic Workflow feature flow.
+name: ka-grill
+description: Grill a feature idea or requirement until nothing is ambiguous, grounded in the project's docs and code. Use whenever the user wants to discuss, clarify, scope, stress-test or grill a feature, change or idea before building it, or says things like "let's grill this", "let's scope this feature", "let's talk this through before we start". First step of the Kansoo feature flow.
 model: opus
 disable-model-invocation: true
 ---
 
-# mw-grill
+# ka-grill
 
 Turn a rough idea into a clear, agreed scope before any ticket or code exists. Questions are cheap now and expensive after implementation.
 
@@ -25,9 +25,9 @@ Example: `Proposed mode: think — touches migrations and queue retries. OK?` Ac
 What the modes mean here:
 
 - **think:** the user writes first; the think-mode rules below apply.
-- **ship:** you drive the questions and draft the summary; the user approves.
+- **ship:** you drive the questions and draft the brief; the user approves.
 
-Record the mode in the summary so later steps follow it.
+Record the mode in the brief so later steps follow it.
 
 ## 1. The user writes first (think mode)
 
@@ -47,7 +47,7 @@ In ship mode, skip this step.
 
 Before the first question:
 
-1. Read `CLAUDE.md` and its docs map. Read every doc relevant to the idea (at minimum architecture and conventions if they exist).
+1. Read `CLAUDE.md` and its docs map. Read every doc relevant to the idea (at minimum architecture and conventions if they exist), plus any ADR in `docs/adr/` that touches the same area and `docs/GLOSSARY.md` if it exists. Use the glossary's terms in your questions and the brief.
 2. Search the codebase for related modules, entities, endpoints and existing solutions.
 3. Tell the user in 2–4 lines what you found: relevant docs, existing code that already does part of this, and any conflict with the architecture.
 
@@ -70,16 +70,21 @@ Ask 1–3 questions at a time, most important first. Cover, as relevant:
 
 When an answer is vague, push back with a concrete scenario ("what happens if two users do X at once?"). When you disagree with a decision, say so once with the reason, then accept the user's call.
 
+When the user rules out an option, note it with their reason: it goes under Rejected options. Record only options that were actually discussed, never ones you make up afterwards.
+
 Stop when every point above is either answered or consciously deferred.
 
-## 4. Summary
+## 4. Brief
 
-Write the summary to `.mw/grill/<slug>.md` and show it to the user for confirmation. In think mode, the summary records the user's decisions, not yours.
+Write the brief to `.ka/briefs/<slug>.md` and show it to the user for confirmation. In think mode, the brief records the user's decisions, not yours.
+
+Set **ADR needed** to `yes` when a decision is hard to reverse, shapes architecture beyond this feature, or contradicts an existing ADR; otherwise `no`.
 
 ```markdown
 # <Feature name>
 
 **Mode:** think | ship
+**ADR needed:** yes | no
 
 ## Goal
 
@@ -90,6 +95,10 @@ Write the summary to `.mw/grill/<slug>.md` and show it to the user for confirmat
 ## Decisions
 
 - <decision> — <why>
+
+## Rejected options
+
+- <option> — <why rejected>   (only options actually discussed; "none" if none)
 
 ## Edge cases & behaviour
 
@@ -104,11 +113,11 @@ Write the summary to `.mw/grill/<slug>.md` and show it to the user for confirmat
 ## Docs read
 ```
 
-Next step: `mw-split`.
+Next step: `ka-split`. Optionally first `ka-docs rfc` to share the brief, or `ka-docs adr` when **ADR needed** is `yes`.
 
 ## Metrics
 
-`.mw/metrics.jsonl` stays local and is never committed. Before appending, run `git check-ignore -q .mw/metrics.jsonl`. If it exits non-zero, tell the user to run `mw-init` in the project root, then append anyway.
+`.ka/metrics.jsonl` stays local and is never committed. Before appending, run `git check-ignore -q .ka/metrics.jsonl`. If it exits non-zero, tell the user to run `ka-init` in the project root, then append anyway.
 
-Append one line to `.mw/metrics.jsonl`:
+Append one line to `.ka/metrics.jsonl`:
 `{"step":"grill","slug":"<slug>","date":"<ISO date>","mode":"think|ship"}`

@@ -1,11 +1,11 @@
 ---
-name: mw-design
-description: Grill and define the visual design system an app will be built on (design direction, color palette, typography, type scale, spacing, radius, elevation, motion, iconography, logo style) and write it to docs/DESIGN.md plus design tokens. Run once per project before the first feature, or when the visual identity changes. Part of the Minimalistic Workflow.
+name: ka-design
+description: Grill and define the visual design system an app will be built on (design direction, color palette, typography, type scale, spacing, radius, elevation, motion, iconography, logo style) and write it to docs/DESIGN.md plus design tokens. Run once per project before the first feature, or when the visual identity changes. Part of Kansoo.
 model: opus
 disable-model-invocation: true
 ---
 
-# mw-design
+# ka-design
 
 Every screen will be built from this document. Decisions made here are expensive to change later, so make them deliberately and write them down precisely enough that no one has to guess a value while building UI.
 
