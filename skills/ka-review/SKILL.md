@@ -62,14 +62,20 @@ State the chosen size in one line before starting.
 
 Give every subagent: the diff, the ticket/plan, the relevant docs, its single focus area, and this instruction:
 
-> Report only real problems in your focus area. For each: `file:line`, what to change, why (one sentence), and evidence. No praise, no summaries, no style nits a linter would catch. If you find nothing, return "none".
+> Report only real problems in your focus area. For each: `file:line`, severity (blocker, major, minor or nit, as defined below), what to change, why (one sentence), and evidence. No praise, no summaries, nothing a linter would catch. If you find nothing, return "none".
 >
 > Every finding must be proven from this codebase. No evidence, no finding:
 > - **Bug or edge case:** a concrete failure scenario that traces through real code: "input X reaches `a.ts:42`, `b.ts:17` does Z, result is Y". A failing test or command output is better. "Might", "could" or "consider" is not evidence.
 > - **Convention or design:** at least one existing place in the codebase that does it the other way, with `file:line`. If no code here shows the convention, it is a preference: drop it.
 > - **Plan or ticket violation:** quote the plan line or acceptance criterion it breaks.
 >
-> Use judgement before reporting: would this cause a wrong result, an incident, or real pain in the next change to this code? If not, drop it. There is no minimum number of findings.
+> Severity:
+> - **blocker:** must be fixed before merge: a bug, security issue, data risk, broken acceptance criterion or plan violation.
+> - **major:** should be fixed in this change: it will cause real pain in the next change to this code (a design or convention break, a missing or hollow test for changed behaviour, an unhandled edge case outside the acceptance criteria).
+> - **minor:** worth fixing, fine as a follow-up: local readability, naming, small duplication.
+> - **nit:** optional polish, the author's call.
+>
+> Pure preference with no evidence is not a nit: drop it. There is no minimum number of findings.
 
 Run subagents in parallel. For size S, apply the same rules yourself across all areas.
 
@@ -78,7 +84,7 @@ Run subagents in parallel. For size S, apply the same rules yourself across all 
 - Deduplicate overlapping findings.
 - Verify every finding's evidence yourself: open each cited `file:line` and confirm the code there says what the finding claims, and walk the failure scenario through it. Drop the finding if a citation is wrong, the scenario does not hold, or it has no evidence.
 - Run tests, typecheck and lint through `ka-run` (`ka-run test -- <test command>`, and so on). Do not trust earlier reports. Rerun a single failing test with full output only when the compact output is not enough to diagnose it.
-- Classify: **blocker** = bug, security issue, data risk, broken acceptance criterion, plan violation. Everything else is a **suggestion**.
+- Check each finding's severity against the definitions in step 5 and correct it if the evidence does not support it.
 - **Think mode:** check every user finding against the code the same way. Calling a user finding a false alarm needs evidence too: cite the code that shows it is not a problem. Match the user's findings to the verified ones: a verified finding the user reported is **found**, one they did not report is **missed**, and a user finding that is not a real problem is a **false alarm**.
 
 ## 7. Docs check
@@ -92,7 +98,7 @@ Every docs finding cites both sides, or it is dropped:
 - the stale doc line (`docs/x.md:12`, quoted), and
 - the diff line that made it stale (`src/y.ts:40`).
 
-Classify: a doc that now gives a wrong command, env var, config key or API (path, parameter, response) is a **blocker**: someone following it will fail. Everything else (outdated wording, a missing mention, a new doc worth adding) is a **suggestion**.
+Severity: **blocker** = the doc now gives a wrong command, env var, config key or API (path, parameter, response), so someone following it will fail. **major** = it describes behaviour or a decision that no longer holds. **minor** = outdated wording, a missing mention, or a new doc worth adding. **nit** = phrasing only.
 
 ## 8. Output
 
@@ -107,18 +113,25 @@ Blockers
 - path/file.ts:42 — <what to change> — <why>
   evidence: <cited file:line and what it shows>
 
-Suggestions
+Major
+- path/file.ts:60 — <what to change> — <why>
+  evidence: <cited file:line and what it shows>
+
+Minor
 - path/file.ts:88 — <what to change> — <why>
   evidence: <cited file:line and what it shows>
+
+Nits
+- path/file.ts:95 — <what to change>
 
 Docs findings
 - [blocker] docs/setup.md:12 — <what to change> — stale since src/config.ts:40
   doc says: "<quoted doc line>"
-- [suggestion] docs/adr/0003-queue.md:20 — <what to change> — stale since src/queue.ts:15
+- [minor] docs/adr/0003-queue.md:20 — <what to change> — stale since src/queue.ts:15
   doc says: "<quoted doc line>"
 ```
 
-Think mode (list blockers first within each section):
+Think mode (sort by severity within each section, blockers first):
 
 ```
 Size: S|M|L · Checks: tests ✓/✗ · typecheck ✓/✗ · lint ✓/✗
@@ -128,7 +141,7 @@ You found
   evidence: <cited file:line and what it shows>
 
 You missed
-- [suggestion] path/file.ts:88 — <what to change> — <why>
+- [major] path/file.ts:88 — <what to change> — <why>
   evidence: <cited file:line and what it shows>
 
 False alarms
@@ -140,12 +153,12 @@ Docs findings
   doc says: "<quoted doc line>"
 ```
 
-Every finding keeps its evidence line, so the user can check it in seconds. Omit an empty section. If there are no findings at all, output the first line and `No issues found.`
+Every finding except a nit keeps its evidence line, so the user can check it in seconds. Omit an empty section. If there are no findings at all, output the first line and `No issues found.`
 
 **Applying docs fixes.** If there are docs findings, end with one question: `Apply the docs fixes?` On yes, make minimal edits to exactly those lines (or write the new doc), add any new doc to the `CLAUDE.md` docs map, and touch nothing else. Code findings are never applied here.
 
 ## Metrics
 
-`{"step":"review","ticket":"NNN","date":"<ISO date>","mode":"think|ship","blockers":<count>,"user_found":<count>,"user_missed":<count>}`
+`{"step":"review","ticket":"NNN","date":"<ISO date>","mode":"think|ship","blockers":<count>,"major":<count>,"minor":<count>,"nit":<count>,"user_found":<count>,"user_missed":<count>}`
 
 In ship mode, omit `user_found` and `user_missed`.
