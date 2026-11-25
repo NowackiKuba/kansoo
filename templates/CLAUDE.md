@@ -11,11 +11,14 @@ Read the docs relevant to a task before planning it. Mark which ones you read.
 | `docs/ARCHITECTURE.md` | Layers, modules, boundaries, patterns |
 | `docs/CONVENTIONS.md` | Naming, code style, testing, commits |
 | `.github/pull_request_template.md` | PR description template |
+| `docs/adr/` | Architecture decisions (ka-docs adr) |
+| `docs/GLOSSARY.md` | Domain terms (ka-docs glossary) |
+| `docs/runbooks/` | Operational runbooks (ka-docs runbook) |
 | `<add more>` | `<what it covers>` |
 
 ## Commands
 
-Raw commands. The workflow skills wrap them with `mw-run` themselves.
+Raw commands. The workflow skills wrap them with `ka-run` themselves.
 
 ```bash
 test:      <e.g. pnpm test>
@@ -25,6 +28,6 @@ lint:      <e.g. pnpm lint>
 
 ## Workflow
 
-This project uses Minimalistic Workflow.
-Feature: mw-grill → mw-split → mw-plan → mw-build → mw-review → mw-docs → mw-commit → mw-pr → mw-wid
-Bug: mw-debug → mw-review → mw-commit → mw-pr → mw-wid
+This project uses Kansoo.
+Feature: ka-grill → [ka-docs rfc|adr] → ka-split → ka-plan → ka-build → ka-review → ka-commit → ka-pr → ka-notes
+Bug: ka-debug → ka-review → ka-commit → ka-pr → ka-notes → [ka-docs postmortem]

@@ -2,7 +2,7 @@
 # Run a verification command with compact output. Exits with the command's exit code.
 set -u
 
-usage() { echo "usage: mw-run <test|typecheck|lint> -- <command...>" >&2; exit 2; }
+usage() { echo "usage: ka-run <test|typecheck|lint> -- <command...>" >&2; exit 2; }
 kind=${1:-}
 case "$kind" in test|typecheck|lint) ;; *) usage ;; esac
 shift

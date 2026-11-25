@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
-# Weekly summary of .mw/metrics.jsonl: are plans improving, is review catching more, is think mode used and worth it.
+# Weekly summary of .ka/metrics.jsonl: are plans improving, is review catching more, is think mode used and worth it.
 set -euo pipefail
 
 weeks=${1:-4}
-[[ $weeks =~ ^[1-9][0-9]*$ ]] || { echo "usage: mw-stats [weeks=4]" >&2; exit 2; }
-command -v jq >/dev/null || { echo "mw-stats: needs jq" >&2; exit 1; }
-file=.mw/metrics.jsonl
-[ -f "$file" ] || { echo "mw-stats: no $file in $(pwd)" >&2; exit 1; }
+[[ $weeks =~ ^[1-9][0-9]*$ ]] || { echo "usage: ka-stats [weeks=4]" >&2; exit 2; }
+command -v jq >/dev/null || { echo "ka-stats: needs jq" >&2; exit 1; }
+file=.ka/metrics.jsonl
+[ -f "$file" ] || { echo "ka-stats: no $file in $(pwd)" >&2; exit 1; }
 
 jq -rn --argjson weeks "$weeks" '
   def week: .[0:10] | strptime("%Y-%m-%d") | mktime | strftime("%G-W%V");
@@ -20,7 +20,7 @@ jq -rn --argjson weeks "$weeks" '
 
   [range($weeks - 1; -1; -1) | now - . * 604800 | strftime("%G-W%V")] as $wks
   | [inputs | select(.date? | type == "string") | . + {week: (.date | week)} | select(.week | IN($wks[]))] as $rows
-  | "mw-stats · last \($weeks) weeks · \($rows | length) lines",
+  | "ka-stats · last \($weeks) weeks · \($rows | length) lines",
     "         | Q1 plans                          | Q2 review       | Q3 mode, per plan/debug",
     row("week"; ["rev/plan", "dev/bld", "att/bld", "stops", "found", "missed", "think", "ship"]),
     ($wks[] as $w

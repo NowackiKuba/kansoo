@@ -1,11 +1,11 @@
 ---
-name: mw-review
-description: Review a diff (current changes by default, or a given branch, commit or range) against its ticket, plan, architecture and conventions, scaling the review to the size and risk of the change by spawning reviewer subagents. Use whenever the user asks for a code review, "review this", "check the diff", "review branch X", "review commit abc123", or after mw-build or mw-debug finishes. Best run in a fresh session. Part of the Minimalistic Workflow.
+name: ka-review
+description: Review a diff (current changes by default, or a given branch, commit or range) against its ticket, plan, architecture and conventions, and checks which docs it made stale, scaling the review to the size and risk of the change by spawning reviewer subagents. Use whenever the user asks for a code review, "review this", "check the diff", "review branch X", "review commit abc123", or after ka-build or ka-debug finishes. Best run in a fresh session. Part of Kansoo.
 model: opus
 disable-model-invocation: true
 ---
 
-# mw-review
+# ka-review
 
 Review like a senior colleague who did not write the code. Output only what to change and why.
 
@@ -29,8 +29,9 @@ If the diff is empty, say so in one line and stop.
 ## 2. Gather context
 
 - The diff and `git diff --stat` for the same target.
-- The ticket and plan in `tickets/` and `.mw/plans/` matching the change (or the `mw-debug` report), and the grill summary named in the plan's `**Grill:**` line, if they exist. Grill decisions and edge cases count as part of the plan.
-- `CLAUDE.md`, architecture and conventions docs.
+- The ticket and plan in `tickets/` and `.ka/plans/` matching the change (or the `ka-debug` report), and the brief named in the plan's `**Brief:**` line, if they exist. Brief decisions and edge cases count as part of the plan.
+- `CLAUDE.md`, architecture and conventions docs, and every doc in the `CLAUDE.md` docs map that covers what the diff touches (including ADRs in `docs/adr/`, runbooks and `docs/GLOSSARY.md`).
+- Stale docs already flagged: the brief's `## Docs to update`, the build report, or the debug report's `## Stale docs`.
 - Surrounding code of every changed file, not only the changed lines.
 
 Use the mode recorded in the plan, ticket or debug report. If none is recorded, ask once: "think or ship?"
@@ -47,7 +48,7 @@ Do not pass the user's findings to the reviewer subagents; they review independe
 
 Count changed lines (added + removed, excluding lockfiles, generated files and snapshots) and files.
 
-**Sensitive** if the diff touches any of the "Sensitive areas" list in `~/minimalistic-workflow/README.md`.
+**Sensitive** if the diff touches any of the "Sensitive areas" list in `~/kansoo/README.md`.
 
 | Size | When                                  | Reviewers                                                                                                             |
 | ---- | ------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
@@ -76,11 +77,24 @@ Run subagents in parallel. For size S, apply the same rules yourself across all 
 
 - Deduplicate overlapping findings.
 - Verify every finding's evidence yourself: open each cited `file:line` and confirm the code there says what the finding claims, and walk the failure scenario through it. Drop the finding if a citation is wrong, the scenario does not hold, or it has no evidence.
-- Run tests, typecheck and lint through `mw-run` (`mw-run test -- <test command>`, and so on). Do not trust earlier reports. Rerun a single failing test with full output only when the compact output is not enough to diagnose it.
+- Run tests, typecheck and lint through `ka-run` (`ka-run test -- <test command>`, and so on). Do not trust earlier reports. Rerun a single failing test with full output only when the compact output is not enough to diagnose it.
 - Classify: **blocker** = bug, security issue, data risk, broken acceptance criterion, plan violation. Everything else is a **suggestion**.
 - **Think mode:** check every user finding against the code the same way. Calling a user finding a false alarm needs evidence too: cite the code that shows it is not a problem. Match the user's findings to the verified ones: a verified finding the user reported is **found**, one they did not report is **missed**, and a user finding that is not a real problem is a **false alarm**.
 
-## 7. Output
+## 7. Docs check
+
+Do this yourself, after the code findings; reviewer subagents do not check docs.
+
+For each doc gathered in step 2, decide: still true, needs an update, or a new doc is needed. Tick off every item in the brief's `## Docs to update`: each one is either already done in the diff or becomes a docs finding. For an ADR the brief or plan names, check that the code still matches the decision it records.
+
+Every docs finding cites both sides, or it is dropped:
+
+- the stale doc line (`docs/x.md:12`, quoted), and
+- the diff line that made it stale (`src/y.ts:40`).
+
+Classify: a doc that now gives a wrong command, env var, config key or API (path, parameter, response) is a **blocker**: someone following it will fail. Everything else (outdated wording, a missing mention, a new doc worth adding) is a **suggestion**.
+
+## 8. Output
 
 Nothing beyond this format. No intro, no recap of the change, no closing remarks.
 
@@ -96,6 +110,12 @@ Blockers
 Suggestions
 - path/file.ts:88 — <what to change> — <why>
   evidence: <cited file:line and what it shows>
+
+Docs findings
+- [blocker] docs/setup.md:12 — <what to change> — stale since src/config.ts:40
+  doc says: "<quoted doc line>"
+- [suggestion] docs/adr/0003-queue.md:20 — <what to change> — stale since src/queue.ts:15
+  doc says: "<quoted doc line>"
 ```
 
 Think mode (list blockers first within each section):
@@ -114,9 +134,15 @@ You missed
 False alarms
 - path/file.ts:10 — <the user's finding> — <why it is not a problem>
   evidence: <cited file:line and what it shows>
+
+Docs findings
+- [blocker] docs/setup.md:12 — <what to change> — stale since src/config.ts:40
+  doc says: "<quoted doc line>"
 ```
 
 Every finding keeps its evidence line, so the user can check it in seconds. Omit an empty section. If there are no findings at all, output the first line and `No issues found.`
+
+**Applying docs fixes.** If there are docs findings, end with one question: `Apply the docs fixes?` On yes, make minimal edits to exactly those lines (or write the new doc), add any new doc to the `CLAUDE.md` docs map, and touch nothing else. Code findings are never applied here.
 
 ## Metrics
 
