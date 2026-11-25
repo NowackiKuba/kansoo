@@ -93,7 +93,7 @@ Proposed mode: think — touches migrations and queue retries. OK?
 | `ka-plan` | You write the plan; the AI reviews it, then offers its own version for comparison | The AI writes the plan |
 | `ka-build` | Builds only what the plan specifies, stops on open design decisions, ends with a comprehension check | Builds the plan |
 | `ka-debug` | You give the hypothesis and the fix; the AI hints in steps and critiques | The AI finds the cause and proposes the fix |
-| `ka-review` | You list your findings first; output is You found / You missed / False alarms | Blockers / Suggestions |
+| `ka-review` | You list your findings first; output is You found / You missed / False alarms | Blockers / Major / Minor / Nits |
 
 In both modes you approve before anything is written, and a plan section marked `[human]` is left for you to implement.
 
