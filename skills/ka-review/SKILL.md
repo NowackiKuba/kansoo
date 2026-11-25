@@ -48,7 +48,7 @@ Do not pass the user's findings to the reviewer subagents; they review independe
 
 Count changed lines (added + removed, excluding lockfiles, generated files and snapshots) and files.
 
-**Sensitive** if the diff touches any of the "Sensitive areas" list in `~/minimalistic-workflow/README.md`.
+**Sensitive** if the diff touches any of the "Sensitive areas" list in `~/kansoo/README.md`.
 
 | Size | When                                  | Reviewers                                                                                                             |
 | ---- | ------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |

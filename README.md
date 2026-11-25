@@ -19,9 +19,9 @@ A small set of Claude Code skills for shipping features and fixing bugs end to e
 ## Quick start
 
 ```bash
-git clone https://github.com/NowackiKuba/kansoo.git ~/minimalistic-workflow
-cp -r ~/minimalistic-workflow/skills/* ~/.claude/skills/
-ln -sfn ~/minimalistic-workflow/bin/* ~/.local/bin/
+git clone https://github.com/NowackiKuba/kansoo.git ~/kansoo
+cp -r ~/kansoo/skills/* ~/.claude/skills/
+ln -sfn ~/kansoo/bin/* ~/.local/bin/
 
 cd your-project && ka-init   # keep tickets/ and .ka/ out of git
 ```
@@ -138,15 +138,15 @@ docs/GLOSSARY.md          # domain terms (ka-docs glossary)
 ## Install
 
 ```bash
-git clone https://github.com/NowackiKuba/kansoo.git ~/minimalistic-workflow
-cp -r ~/minimalistic-workflow/skills/* ~/.claude/skills/
+git clone https://github.com/NowackiKuba/kansoo.git ~/kansoo
+cp -r ~/kansoo/skills/* ~/.claude/skills/
 ```
 
 Put the scripts in `bin/` on your PATH (`~/.local/bin` must be on PATH):
 
 ```bash
-chmod +x ~/minimalistic-workflow/bin/*
-ln -sfn ~/minimalistic-workflow/bin/* ~/.local/bin/
+chmod +x ~/kansoo/bin/*
+ln -sfn ~/kansoo/bin/* ~/.local/bin/
 ```
 
 Then add the sections from `templates/CLAUDE.md` to your project's `CLAUDE.md`, and run `ka-init` in the project root.

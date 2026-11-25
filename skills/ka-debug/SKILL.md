@@ -17,7 +17,7 @@ The user produces the first version of every decision (scope, plan, hypothesis, 
 
 If the user did not say, propose a mode with a one-sentence reason and let them confirm or override it:
 
-- **think** if the change touches any of the "Sensitive areas" list in `~/minimalistic-workflow/README.md`; or touches paths you have not changed in the last ~3 months (`git log --author="$(git config user.email)" --since=3.months --oneline -- <affected paths>` prints nothing); or involves a design decision that is hard to reverse.
+- **think** if the change touches any of the "Sensitive areas" list in `~/kansoo/README.md`; or touches paths you have not changed in the last ~3 months (`git log --author="$(git config user.email)" --since=3.months --oneline -- <affected paths>` prints nothing); or involves a design decision that is hard to reverse.
 - **ship** otherwise.
 
 Example: `Proposed mode: think — touches migrations and queue retries. OK?` Accept a one-word reply: `ok` keeps the proposal, `think` or `ship` overrides it.
