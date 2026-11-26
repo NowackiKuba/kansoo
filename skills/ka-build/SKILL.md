@@ -1,6 +1,6 @@
 ---
 name: ka-build
-description: Implement an approved plan from .ka/plans/, following the project's architecture and conventions, and loop on tests, typecheck and lint until they pass. Use whenever the user approves a plan, says "go", "build it", "implement it", "approved, do it", or asks to implement a ticket that has an approved plan. Runs after ka-plan in Kansoo.
+description: Implement an approved plan from .ka/plans/, or the code findings of a ka-review report from .ka/reviews/, following the project's architecture and conventions, and loop on tests, typecheck and lint until they pass. Use whenever the user approves a plan, says "go", "build it", "implement it", "approved, do it", asks to implement a ticket that has an approved plan, or to fix review findings. Runs after ka-plan in Kansoo.
 model: sonnet
 disable-model-invocation: true
 ---
@@ -15,7 +15,7 @@ The user produces the first version of every decision (scope, plan, hypothesis, 
 
 ## Before coding
 
-1. Read the approved plan in `.ka/plans/NNN-*.md`. If there is no approved plan, stop and suggest `ka-plan`. Use the mode recorded in the plan; if none is recorded, ask once: "think or ship?"
+1. Read the approved plan in `.ka/plans/NNN-*.md` (given a `ka-review` report instead, follow Review fixes below). If there is no approved plan, stop and suggest `ka-plan`. Use the mode recorded in the plan; if none is recorded, ask once: "think or ship?"
 2. Read the ticket, the brief named in the plan's `**Brief:**` line (the plan refers to its decisions without restating them), `CLAUDE.md`, and the architecture and conventions docs.
 3. Find the test, typecheck and lint commands in `CLAUDE.md`. If they are missing, read `package.json` (or equivalent) and ask the user to confirm them. Run every check through `ka-run <test|typecheck|lint> -- <command>` (e.g. `ka-run test -- pnpm test`): it prints `ok (<kind>)` on success and only the useful part of the output on failure.
 
@@ -27,6 +27,17 @@ The user produces the first version of every decision (scope, plan, hypothesis, 
 - Match existing patterns in the codebase over your own preferences.
 - Skip every part of the plan marked `[human]`. Leave a `TODO [human]: <what, plan section>` comment where that code belongs.
 - **Think mode:** implement only what the plan specifies. If the plan leaves a design decision open, stop and ask the user to decide. Never fill the gap yourself.
+
+## Review fixes
+
+When given a `ka-review` file (`.ka/reviews/NNN.md`) instead of a plan:
+
+- Read it, then the plan, brief and ticket it reviewed (if they exist), and do step 3 of Before coding. Use the mode recorded in the plan; if none, ask once.
+- Fix every finding in the file, in order, nits included. The user already chose them in review: do not ask which to apply and do not fix anything not in the file.
+- Each finding's `file:line`, what to change and evidence are the spec. When a finding allows more than one real fix: **think mode** ask the user which; **ship mode** pick one and name it in the report.
+- If a fix needs a design change the plan does not cover, treat it as a wrong plan (see below).
+- All other rules apply: never touch docs, verification loop, report. Skip the comprehension check unless the fixes changed behaviour.
+- When the checks are green, delete the review file so it cannot be applied twice.
 
 ## Verification loop
 
