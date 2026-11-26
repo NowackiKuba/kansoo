@@ -53,7 +53,7 @@ flowchart LR
 
 **Bug:** `ka-debug` → `ka-review` → `ka-commit` → `ka-pr` → `ka-notes`, then `ka-docs postmortem` if the bug reached users
 
-`ka-review` also checks which docs the change made stale and offers to fix them, in both flows. Code findings go back to `ka-build` (it reads the review saved in `.ka/reviews/`), then `ka-review` runs again.
+`ka-review` also checks which docs the change made stale and offers to fix them, in both flows. Code findings go back to `ka-build` (it reads the review saved in `.ka/reviews/`), then `ka-review` runs again as a small re-review of just the fixes.
 
 | Skill | Does |
 |---|---|
@@ -126,7 +126,7 @@ CLAUDE.md                 # project map: docs, commands (see templates/CLAUDE.md
 tickets/NNN-slug.md       # local tickets (ka-split)
 .ka/briefs/<slug>.md      # briefs (ka-grill)
 .ka/plans/NNN-slug.md     # approved plans (ka-plan)
-.ka/reviews/NNN.md        # code findings you kept in review, applied and deleted by ka-build
+.ka/reviews/NNN.md        # code findings you kept in review; ka-build marks them applied, re-review deletes the file
 .ka/metrics.jsonl         # one line per step, for measuring the workflow (local only)
 docs/rfc/<slug>.md        # RFCs (ka-docs rfc), committed
 docs/adr/NNNN-slug.md     # ADRs (ka-docs adr), accepted by ka-pr
