@@ -153,9 +153,16 @@ Docs findings
   doc says: "<quoted doc line>"
 ```
 
-Every finding except a nit keeps its evidence line, so the user can check it in seconds. Omit an empty section. If there are no findings at all, output the first line and `No issues found.`
+Every finding except a nit keeps its evidence line, so the user can check it in seconds. Number the code findings `1.`, `2.`, … in place of `-`, continuing across sections; false alarms and docs findings keep `-`. Omit an empty section. If there are no findings at all, output the first line and `No issues found.`
 
-**Applying docs fixes.** If there are docs findings, end with one question: `Apply the docs fixes?` On yes, make minimal edits to exactly those lines (or write the new doc), add any new doc to the `CLAUDE.md` docs map, and touch nothing else. Code findings are never applied here.
+**Closing questions.** Ask together, only those that apply, and wait for one answer:
+
+- `Drop any code findings? (numbers, or none)`
+- `Apply the docs fixes?`
+
+Docs: on yes, make minimal edits to exactly those lines (or write the new doc), add any new doc to the `CLAUDE.md` docs map, and touch nothing else.
+
+Code: never apply code findings here. Save the kept ones to `.ka/reviews/NNN.md` (ticket number, or the branch name when there is no ticket), overwriting any older file: the code-finding lines exactly as printed, in order, with their severity and evidence, nothing else. If every finding is dropped, write no file. Then end with: `Next step: ka-build with .ka/reviews/NNN.md in a fresh session, then ka-review again.`
 
 ## Metrics
 
