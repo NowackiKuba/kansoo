@@ -26,6 +26,23 @@ Use the target from `$ARGUMENTS` or the user's message:
 
 If the diff is empty, say so in one line and stop.
 
+If `.ka/reviews/NNN.md` for this change has an `## Applied` section, `ka-build` has fixed an earlier review: do a re-review (below) instead of steps 2–7.
+
+## Re-review
+
+A small pass over the fixes only. The full review already covered the rest of the diff.
+
+- **Size.** Count the lines changed in the files listed under `## Applied`. Over 100 lines: say so in one line, delete the review file and do a full review (steps 2–8). Otherwise size S: review yourself, no subagents, no user-first step, no sensitive-area escalation.
+- **Each finding.** Check it is fixed and cite the line that shows it. An unfixed finding is reported again, unchanged.
+- **New problems.** Look only at the hunks in the `## Applied` files, plus their direct callers when a signature or behaviour changed.
+- **Docs.** Check only the docs covering those files.
+- **Checks.** Run tests, typecheck and lint, as in a full review.
+
+Output in the step 8 format, with a `Fixed` section first listing each finding number and its evidence line. Then:
+
+- No open findings: delete the review file, ask the docs question if any, and end with `Next step: ka-commit.`
+- Otherwise: the step 8 closing questions; the rewritten review file holds only the kept open findings, without `## Applied`.
+
 ## 2. Gather context
 
 - The diff and `git diff --stat` for the same target.
@@ -162,10 +179,10 @@ Every finding except a nit keeps its evidence line, so the user can check it in 
 
 Docs: on yes, make minimal edits to exactly those lines (or write the new doc), add any new doc to the `CLAUDE.md` docs map, and touch nothing else.
 
-Code: never apply code findings here. Save the kept ones to `.ka/reviews/NNN.md` (ticket number, or the branch name when there is no ticket), overwriting any older file: the code-finding lines exactly as printed, in order, with their severity and evidence, nothing else. If every finding is dropped, write no file. Then end with: `Next step: ka-build with .ka/reviews/NNN.md in a fresh session, then ka-review again.`
+Code: never apply code findings here. Save the kept ones to `.ka/reviews/NNN.md` (ticket number, or the branch name when there is no ticket), overwriting any older file: the code-finding lines exactly as printed, in order, with their severity and evidence, nothing else. Then end with: `Next step: ka-build with .ka/reviews/NNN.md in a fresh session, then ka-review again.` If every finding is dropped, write no file and delete any existing one for this change.
 
 ## Metrics
 
 `{"step":"review","ticket":"NNN","date":"<ISO date>","mode":"think|ship","blockers":<count>,"major":<count>,"minor":<count>,"nit":<count>,"user_found":<count>,"user_missed":<count>}`
 
-In ship mode, omit `user_found` and `user_missed`.
+In ship mode, omit `user_found` and `user_missed`. A re-review logs `"step":"re-review"` with the same counts (open findings only, no `user_*`), so `ka-stats` keeps it out of the review averages.

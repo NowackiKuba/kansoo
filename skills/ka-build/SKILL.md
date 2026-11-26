@@ -32,12 +32,13 @@ The user produces the first version of every decision (scope, plan, hypothesis, 
 
 When given a `ka-review` file (`.ka/reviews/NNN.md`) instead of a plan:
 
+- If the file already has an `## Applied` section, stop and suggest `ka-review`: those fixes are waiting for re-review.
 - Read it, then the plan, brief and ticket it reviewed (if they exist), and do step 3 of Before coding. Use the mode recorded in the plan; if none, ask once.
 - Fix every finding in the file, in order, nits included. The user already chose them in review: do not ask which to apply and do not fix anything not in the file.
 - Each finding's `file:line`, what to change and evidence are the spec. When a finding allows more than one real fix: **think mode** ask the user which; **ship mode** pick one and name it in the report.
 - If a fix needs a design change the plan does not cover, treat it as a wrong plan (see below).
 - All other rules apply: never touch docs, verification loop, report. Skip the comprehension check unless the fixes changed behaviour.
-- When the checks are green, delete the review file so it cannot be applied twice.
+- When the checks are green, append `## Applied` to the review file: one line per finding, `N. file:line` of its fix (several if it took more than one place). `ka-review` re-reviews only those files and deletes the file when clean.
 
 ## Verification loop
 
